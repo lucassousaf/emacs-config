@@ -32,13 +32,12 @@
 
 ;; theme
 
-(use-package doom-themes
+(use-package zenburn-theme
   :straight t
-  :custom
-  (doom-themes-enable-bold t)
-  (doom-themes-enable-italic t)
+  :init
+  (setq zenburn-override-colors-alist '(("zenburn-bg" . "#111111")))
   :config
-  (load-theme 'doom-challenger-deep t))
+  (load-theme 'zenburn t))
 
 ;; clojure-mode
 
