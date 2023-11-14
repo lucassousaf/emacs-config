@@ -4,6 +4,10 @@
 
 ;;; Code:
 
+;; disable package.el
+
+(setq package-enable-at-startup nil)
+
 ;; straight.el
 
 (defvar bootstrap-version)
