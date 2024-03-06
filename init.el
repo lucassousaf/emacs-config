@@ -326,6 +326,10 @@
 
 ;; misc
 
+;; Make sure trailing white space and tabs are visually highlighted.
+(setq-default whitespace-style '(face trailing tabs))
+(global-whitespace-mode +1)
+
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
   backup-by-copying t    ; Don't delink hardlinks
   version-control t      ; Use version numbers on backups
