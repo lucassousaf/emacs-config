@@ -214,9 +214,11 @@
    (clojurec-mode . lsp))
   :bind
   (("M-." . lsp-find-definition)
+   ("C-c l r" . lsp-rename)
    ("C-c l d" . lsp-describe-thing-at-point)
    ("C-c f i" . lsp-find-implementation)
-   ("C-c f r" . lsp-find-references)))
+   ("C-c f r" . lsp-find-references)
+   ("C-c f d" . lsp-find-definition)))
 
 ;; lsp-ui
 
