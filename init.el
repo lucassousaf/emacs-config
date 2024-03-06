@@ -319,6 +319,11 @@
   :mode
   ("\\.scss\\'" . scss-mode))
 
+;; uuidgen
+
+(use-package uuidgen
+  :straight t)
+
 ;; misc
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
