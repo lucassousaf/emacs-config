@@ -30,16 +30,31 @@
 
 (straight-use-package 'use-package)
 
+;; Remove toolbar
+(menu-bar-mode -1)
+
 ;; theme
 
-(use-package zenburn-theme
+(use-package doom-themes
   :straight t
   :init
-  (setq zenburn-override-colors-alist '(("zenburn-bg" . "#111111")))
   :config
-  (load-theme 'zenburn t))
+  (setq doom-themes-enable-bold t)
+  (load-theme 'doom-dark+ t))
 
 ;; clojure-mode
+
+(use-package clojure-ts-mode
+  :straight t
+  :hook ((clojure-ts-mode . cider-mode)
+	 (clojure-ts-mode . enable-paredit-mode)
+	 (clojure-ts-clojurescript-mode . enable-paredit-mode)
+	 (clojure-ts-clojurec-mode . enable-paredit-mode))
+  :mode (("\\.clj\\'" . clojure-ts-mode)
+	 ("\\.cljs\\'" . clojure-ts-clojurescript-mode)
+	 ("\\.cljc\\'" . clojure-ts-clojurec-mode)
+	 ("\\.edn\\'" . clojure-ts-mode)
+	 ("\\.bb\\'" . clojure-ts-mode)))
 
 (use-package clojure-mode
   :straight t)
@@ -55,7 +70,8 @@
    (cider-repl-display-help-banner nil)
    (cider-repl-use-content-types nil)
    (cider-known-endpoints '(("docker" "127.0.0.1" "4001")))
-   (cider-eldoc-display-for-symbol-at-point nil))
+   (cider-eldoc-display-for-symbol-at-point nil)
+   (cider-repl-prompt-function 'cider-repl-prompt-abbreviated))
   :config
   (remove-hook 'eldoc-documentation-functions #'cider-eldoc)
   :hook
@@ -73,9 +89,7 @@
   ;; behaviour.
   (:map paredit-mode-map ("RET" . nil))
   :hook
-  ((clojure-mode . enable-paredit-mode)
-   (clojurescript-mode . enable-paredit-mode)
-   (emacs-lisp-mode . enable-paredit-mode)
+  ((emacs-lisp-mode . enable-paredit-mode)
    (cider-repl-mode . paredit-mode)))
 
 ;; company
@@ -103,7 +117,8 @@
   :straight t
   :hook
   ((emacs-lisp-mode . rainbow-delimiters-mode)
-   (clojure-mode . rainbow-delimiters-mode)
+   (clojure-ts-mode . rainbow-delimiters-mode)
+   (clojure-ts-clojurescript-mode . rainbow-delimiters-mode)
    (cider-repl-mode . rainbow-delimiters-mode)))
 
 ;; magit
@@ -134,6 +149,7 @@
 ;; flycheck-clj-kondo
 
 (use-package flycheck-clj-kondo
+  :disabled
   :straight t)
 
 ;; web-mode
@@ -189,36 +205,31 @@
   (lsp-lens-enable nil)
   (lsp-signature-auto-activate nil)
   (lsp-enable-snippet nil)
-  ;; Set to `nil` to use Cider for indentation instead, of lsp-mode.
-  (lsp-enable-indentation nil)
-  ;; Set to `t` to use lsp-mode completion instead of Cider. Works
-  ;; without a REPL connection too.
+  (lsp-enable-indentation t)
   (lsp-enable-completion-at-point t)
-  ;; Set to `nil` to disable lsp-mode showing eldoc during symbol at
-  ;; point. It conflicts with CIDER same feature, they both fight to
-  ;; show the signature and the end result is that no signature is
-  ;; shown!
-  (lsp-eldoc-enable-hover nil)
+  (lsp-eldoc-enable-hover t)
   (lsp-enable-symbol-highlighting t)
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-modeline-code-actions-enable t)
   :config
-  (dolist (m '(clojure-mode
-               clojurec-mode
-               clojurescript-mode
-               clojurex-mode))
+  (dolist (m '(clojure-ts-mode
+	       clojure-ts-clojurescript-mode
+	       clojure-ts-clojurec-mode))
     (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
   :hook
-  ((clojure-mode . lsp)
-   (clojurescript-mode . lsp)
-   (clojurec-mode . lsp))
+  ((clojure-ts-mode . lsp)
+   (clojure-ts-clojurescript-mode . lsp)
+   (clojure-ts-clojurec-mode . lsp))
   :bind
   (("M-." . lsp-find-definition)
    ("C-c l r" . lsp-rename)
    ("C-c l d" . lsp-describe-thing-at-point)
    ("C-c f i" . lsp-find-implementation)
    ("C-c f r" . lsp-find-references)
-   ("C-c f d" . lsp-find-definition)))
+   ("C-c f d" . lsp-find-definition)
+   ("C-c l a" . lsp-clojure-add-missing-libspec)
+   ("C-c l c n" . lsp-clojure-clean-ns)
+   ("C-c l f b" . lsp-format-buffer)))
 
 ;; lsp-ui
 
@@ -323,6 +334,32 @@
 
 (use-package uuidgen
   :straight t)
+
+;; restclient
+
+(use-package restclient
+  :straight t)
+
+;; git-link
+
+(use-package git-link
+  :straight t
+  :bind
+  (("C-c g l" . git-link)))
+
+;; origami
+
+(use-package dash
+  :straight t)
+
+(use-package s
+  :straight t)
+
+(use-package origami
+  :straight t
+  :bind
+  (("C-c o c" . origami-close-node)
+   ("C-c o o" . origami-open-node)))
 
 ;; misc
 
